@@ -1,0 +1,47 @@
+name: Compilacion y pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Iniciar SQL Server de pruebas
+        shell: bash
+        run: |
+          export MSSQL_SA_PASSWORD="Aa1!$(openssl rand -hex 24)"
+          echo "::add-mask::$MSSQL_SA_PASSWORD"
+          docker run -d --name aula-sql -e ACCEPT_EULA=Y -e MSSQL_PID=Developer -e MSSQL_SA_PASSWORD -p 127.0.0.1:1433:1433 mcr.microsoft.com/mssql/server:2025-latest
+          echo "TEST_SQL_CONNECTION=Server=127.0.0.1,1433;Database=master;User ID=sa;Password=$MSSQL_SA_PASSWORD;Encrypt=True;TrustServerCertificate=True;Connect Timeout=10" >> "$GITHUB_ENV"
+          for intentoAula in {1..60}; do
+            if docker exec -e SQLCMDPASSWORD="$MSSQL_SA_PASSWORD" aula-sql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -C -Q 'SELECT 1' -b >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs aula-sql
+          exit 1
+      - run: dotnet restore
+      - run: dotnet build --no-restore -c Release
+      - run: dotnet test --no-build -c Release --logger trx --results-directory TestResults
+      - name: Conservar resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-pruebas
+          path: TestResults/*.trx
+      - name: Detener SQL Server
+        if: always()
+        run: docker rm -f aula-sql || true

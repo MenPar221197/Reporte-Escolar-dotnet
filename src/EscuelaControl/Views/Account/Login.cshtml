@@ -1,0 +1,21 @@
+@model LoginForm
+@{ ViewData["Title"] = "Iniciar sesión"; }
+<div class="login-layout">
+    <section class="login-story">
+        <div class="brand"><span class="brand-mark">a</span><span>aula<span class="brand-sub">CONTROL ESCOLAR</span></span></div>
+        <div class="login-copy"><span class="eyebrow light">EL VÍNCULO QUE IMPORTA</span><h1>Una escuela.<br />Muchas historias.<br /><em>Todo conectado.</em></h1><p>Organiza los expedientes de tus alumnos y mantén a sus familias cerca.</p></div>
+        <div class="connection-strip"><span>FAMILIAS</span><span>ALUMNOS</span><span>ESCUELAS</span></div>
+        <p class="tiny">Un espacio para el equipo de control escolar.</p>
+    </section>
+    <section class="login-form">
+        <span class="eyebrow">BIENVENIDO A TU ESPACIO</span><h2>Iniciar sesión</h2><p class="muted">Usa la cuenta administrativa de tu institución.</p>
+        <form asp-action="Login" method="post">
+            <input asp-for="ReturnUrl" type="hidden" />
+            @if (!ViewData.ModelState.IsValid) { <div asp-validation-summary="All" class="validation" role="alert"></div> }
+            <div class="field"><label asp-for="Email"></label><input asp-for="Email" autocomplete="username" placeholder="tu.correo@escuela.edu.mx" required /></div>
+            <div class="field"><label asp-for="Password"></label><input asp-for="Password" autocomplete="current-password" required /></div>
+            <button class="button primary wide" type="submit">Entrar a Aula <span>→</span></button>
+        </form>
+        <p class="login-help">¿Necesitas acceso? Solicítalo a la persona responsable del sistema en tu institución.</p>
+    </section>
+</div>

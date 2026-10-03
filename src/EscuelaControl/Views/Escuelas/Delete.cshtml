@@ -1,0 +1,6 @@
+@model Escuela
+@{ ViewData["Title"] = "Eliminar escuela"; var count = (int)(ViewData["Relacionados"] ?? 0); }
+<section class="panel form-panel narrow"><span class="eyebrow">CONFIRMAR ELIMINACIÓN</span><h1>@Model.Nombre</h1>@if (!ViewData.ModelState.IsValid) { <div asp-validation-summary="All" class="validation" role="alert"></div> }
+@if (count > 0) { <div class="notice">Esta escuela tiene @count alumnos vinculados. Puedes <a asp-action="Edit" asp-route-id="@Model.Id">marcarla como inactiva</a> para conservar los expedientes.</div> }
+else { <p>Se eliminará la escuela <strong>@Model.Clave</strong>. Esta acción no se puede deshacer.</p><form method="post"><input name="version" value="@Model.Version" type="hidden" /><button class="button danger" type="submit">Eliminar definitivamente</button></form> }
+<a class="button subtle" asp-action="Details" asp-route-id="@Model.Id">Volver a la escuela</a></section>

@@ -1,0 +1,44 @@
+@{ var section = ViewContext.RouteData.Values["controller"]?.ToString(); }
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · Aula</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="icon" href="~/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <aside class="sidebar">
+        <a class="brand" asp-controller="Home" asp-action="Index"><span class="brand-mark">a</span><span>aula<span class="brand-sub">CONTROL ESCOLAR</span></span></a>
+        <div class="nav-caption">ESPACIO DE TRABAJO</div>
+        <nav aria-label="Navegación principal">
+            <a class="nav-item @(section == "Home" ? "selected" : "")" asp-controller="Home" asp-action="Index"><span class="nav-symbol">◫</span>Resumen</a>
+            <a class="nav-item @(section == "Alumnos" ? "selected" : "")" asp-controller="Alumnos" asp-action="Index"><span class="nav-symbol">◉</span>Alumnos</a>
+            <a class="nav-item @(section == "Familias" ? "selected" : "")" asp-controller="Familias" asp-action="Index"><span class="nav-symbol">⌘</span>Familias</a>
+            <a class="nav-item @(section == "Escuelas" ? "selected" : "")" asp-controller="Escuelas" asp-action="Index"><span class="nav-symbol">▤</span>Escuelas</a>
+        </nav>
+        <div class="sidebar-note"><span class="small-label">TODO CONECTADO</span><p>Familias, alumnos y escuelas en un mismo lugar.</p><span class="tiny">Prototipo institucional · v1.0</span></div>
+        <div class="account"><span class="avatar">CE</span><div><strong>Control escolar</strong><a asp-controller="Account" asp-action="CambiarClave">Cambiar contraseña</a></div></div>
+        <form asp-controller="Account" asp-action="Logout" method="post"><button class="logout" type="submit">Cerrar sesión ↗</button></form>
+    </aside>
+    <div class="workspace">
+        <header class="topbar"><span>CONTROL ESCOLAR <span class="slash">/</span> @ViewData["Title"]</span><span class="access-badge"><span class="dot"></span> Acceso administrativo</span></header>
+        <main id="contenido" class="main-content">
+            @if (TempData["Success"] is string message) { <div class="notice success" role="status">✓ @message</div> }
+            @RenderBody()
+            <footer class="footer">Aula · Registro y seguimiento escolar <span>Datos protegidos por inicio de sesión</span></footer>
+        </main>
+    </div>
+}
+else
+{
+    <main id="contenido" class="public-shell">@RenderBody()</main>
+}
+<script src="~/js/site.js" asp-append-version="true" defer></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

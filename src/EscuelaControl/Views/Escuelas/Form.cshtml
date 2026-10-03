@@ -1,0 +1,9 @@
+@model EscuelaForm
+@{ ViewData["Title"] = Model.Id == 0 ? "Registrar escuela" : "Editar escuela"; }
+<div class="page-heading"><div><a class="back-link" asp-action="Index">← Escuelas</a><h1>@ViewData["Title"]</h1><p>Identifica el plantel al que estarán vinculados los alumnos.</p></div></div>
+<form asp-action="@(Model.Id == 0 ? "Create" : "Edit")" asp-route-id="@(Model.Id == 0 ? (int?)null : Model.Id)" method="post" class="panel form-panel">
+<input asp-for="Id" type="hidden" /><input asp-for="Version" type="hidden" />@if (!ViewData.ModelState.IsValid) { <div asp-validation-summary="All" class="validation" role="alert"></div> }
+<div class="form-section"><span class="step-number">01</span><div><h3>Datos del plantel</h3><p>La clave permite distinguir escuelas con nombres similares.</p></div></div>
+<div class="form-grid"><div class="field"><label asp-for="Clave"></label><input asp-for="Clave" placeholder="Ej. PLANTEL-01" maxlength="20" required /><span asp-validation-for="Clave"></span></div><div class="field"><label asp-for="Nombre"></label><input asp-for="Nombre" maxlength="120" required /><span asp-validation-for="Nombre"></span></div><div class="field"><label asp-for="Nivel"></label><select asp-for="Nivel" asp-items="Html.GetEnumSelectList<NivelEducativo>()"></select></div><div class="field"><label asp-for="Telefono"></label><input asp-for="Telefono" type="tel" maxlength="20" autocomplete="tel" /><span asp-validation-for="Telefono"></span></div><div class="field full"><label asp-for="Direccion"></label><input asp-for="Direccion" maxlength="250" /></div></div>
+<label class="check"><input asp-for="Activa" /> Escuela activa</label><p class="hint">Una escuela inactiva conserva sus alumnos, pero no recibe nuevas asignaciones.</p>
+<div class="form-actions"><button type="submit" class="button primary">Guardar escuela</button><a class="button subtle" asp-action="Index">Cancelar</a></div></form>

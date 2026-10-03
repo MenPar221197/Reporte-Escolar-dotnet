@@ -1,0 +1,10 @@
+@model CambiarClaveForm
+@{ ViewData["Title"] = "Cambiar contraseña"; }
+<div class="page-heading"><div><span class="eyebrow">TU CUENTA</span><h1>Cambiar contraseña</h1><p>Usa al menos 12 caracteres con mayúscula, minúscula, número y símbolo.</p></div></div>
+<form method="post" class="panel form-panel narrow">
+    @if (!ViewData.ModelState.IsValid) { <div asp-validation-summary="All" class="validation" role="alert"></div> }
+    <div class="field"><label asp-for="Actual"></label><input asp-for="Actual" autocomplete="current-password" required /></div>
+    <div class="field"><label asp-for="Nueva"></label><input asp-for="Nueva" autocomplete="new-password" minlength="12" required /></div>
+    <div class="field"><label asp-for="Confirmacion"></label><input asp-for="Confirmacion" autocomplete="new-password" required /></div>
+    <div class="form-actions"><button class="button primary" type="submit">Actualizar contraseña</button><a class="button subtle" asp-controller="Home" asp-action="Index">Cancelar</a></div>
+</form>

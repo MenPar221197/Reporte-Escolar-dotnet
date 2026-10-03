@@ -1,0 +1,13 @@
+@model PaginationVm
+@{
+    var previous = Context.Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString());
+    var next = new Dictionary<string,string>(previous);
+    previous["page"] = (Model.Page - 1).ToString(); next["page"] = (Model.Page + 1).ToString();
+}
+<nav class="pagination" aria-label="Paginación">
+    <span>@Model.Total registros · Página @Model.Page de @Model.Pages</span>
+    <div>
+        @if (Model.Page > 1) { <a class="button subtle small" asp-action="Index" asp-all-route-data="previous">← Anterior</a> }
+        @if (Model.Page < Model.Pages) { <a class="button subtle small" asp-action="Index" asp-all-route-data="next">Siguiente →</a> }
+    </div>
+</nav>

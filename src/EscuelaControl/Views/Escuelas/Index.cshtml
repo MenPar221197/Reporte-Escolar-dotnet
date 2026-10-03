@@ -1,0 +1,7 @@
+@model PagedList<EscuelaFila>
+@{ ViewData["Title"] = "Escuelas"; }
+<div class="page-heading"><div><span class="eyebrow">PLANTELES DE LA INSTITUCIÓN</span><h1>Escuelas</h1><p>Organiza los planteles y consulta a sus alumnos.</p></div><a class="button primary" asp-action="Create">+ Registrar escuela</a></div>
+<section class="panel"><form method="get" class="filters"><div class="field search-field"><label for="q">Buscar escuela</label><input id="q" name="q" value="@ViewData["Q"]" maxlength="120" placeholder="Nombre o clave de la escuela…" /></div><button class="button primary" type="submit">Buscar</button><a class="text-link" asp-action="Index">Limpiar</a></form>
+@if (Model.Items.Count == 0) { <div class="empty"><h3>No hay escuelas para mostrar</h3><p>Registra tu primer plantel o cambia la búsqueda.</p><a class="button subtle" asp-action="Create">Registrar escuela</a></div> }
+else { <div class="table-wrap"><table><thead><tr><th>Escuela / clave</th><th>Nivel</th><th>Alumnos</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>@foreach (var e in Model.Items) { <tr><td><a class="record-link" asp-action="Details" asp-route-id="@e.Id">@e.Nombre</a><small class="block mono">@e.Clave</small></td><td>@e.Nivel</td><td>@e.Alumnos</td><td><span class="badge @(e.Activa ? "green" : "gray")">@(e.Activa ? "Activa" : "Inactiva")</span></td><td><a class="text-link" asp-action="Edit" asp-route-id="@e.Id">Editar</a></td></tr> }</tbody></table></div> }
+<partial name="_Pagination" model="new PaginationVm(Model.Page, Model.Pages, Model.Total)" /></section>

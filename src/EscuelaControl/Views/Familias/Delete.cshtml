@@ -1,0 +1,6 @@
+@model Familia
+@{ ViewData["Title"] = "Eliminar familia"; var count = (int)(ViewData["Relacionados"] ?? 0); }
+<section class="panel form-panel narrow"><span class="eyebrow">CONFIRMAR ELIMINACIÓN</span><h1>Familia F-@Model.Id.ToString("000")</h1><p>@Model.Referencia</p>@if (!ViewData.ModelState.IsValid) { <div asp-validation-summary="All" class="validation" role="alert"></div> }
+@if (count > 0) { <div class="notice">Esta familia tiene @count alumnos vinculados. Reasígnalos antes de eliminarla.</div> }
+else { <p>Se eliminarán sus datos de contacto. Esta acción no se puede deshacer.</p><form method="post"><input name="version" value="@Model.Version" type="hidden" /><button class="button danger" type="submit">Eliminar definitivamente</button></form> }
+<a class="button subtle" asp-action="Details" asp-route-id="@Model.Id">Volver a la familia</a></section>
